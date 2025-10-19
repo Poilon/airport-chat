@@ -5,7 +5,10 @@ RUN apt-get update -qq && apt-get install -y nodejs postgresql-client build-esse
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 4 --retry 3
+RUN bundle config set --local force_ruby_platform true && \
+    bundle config set --local specific_platform false && \
+    gem install nokogiri --platform=ruby && \
+    bundle install --jobs 4 --retry 3
 
 COPY . .
 
