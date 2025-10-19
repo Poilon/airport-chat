@@ -16,5 +16,6 @@ test:
   database: airport_chat_test
 
 production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  adapter: sqlite3
+  database: storage/production.sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
