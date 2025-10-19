@@ -1,15 +1,16 @@
 FROM ruby:3.1.2
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client build-essential libsqlite3-dev
 
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle lock --add-platform x86_64-linux && \
+    bundle install --jobs 4 --retry 3
 
 COPY . .
 
-RUN bundle exec rails assets:precompile
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 EXPOSE 3000
 
